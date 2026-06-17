@@ -42,6 +42,7 @@
      jq
      unzip
      unrar
+     kdePackages.konsole
      kdePackages.ark
      kdePackages.kio
      kdePackages.kalk

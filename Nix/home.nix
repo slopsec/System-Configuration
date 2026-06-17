@@ -22,7 +22,7 @@
       corefonts
 #     prismlauncher
       onlyoffice-desktopeditors
-      obsidian
+#     obsidian
 #     vesktop
 #     revolt-desktop
 #     element-desktop
@@ -34,10 +34,13 @@
 #     signal-desktop
 #     briar-desktop
 #     revolt-desktop
-      element-desktop
+#     element-desktop
 #     dino
 #     hexchat
       brave
+      winetricks
+      protontricks
+      protonup-qt
      #grayjay # Broken at the moment.
 #     freetube
 #     satisfactorymodmanager
@@ -51,15 +54,15 @@
 #     spotify
 #     authenticator
       oh-my-posh
-      oh-my-zsh
+#     oh-my-zsh
       go-2fa
       wayclip
 #   gdlauncher-carbon
   # For college.
-      vscodium
-     #ciscoPacketTracer9
+#     vscodium
+#     ciscoPacketTracer9
 #     wireshark
-     #omnissa-horizon-client
+      omnissa-horizon-client
       alarm-clock-applet
 #     openvas-scanner
     # # Adds the 'hello' command to your environment. It prints a friendly

@@ -12,6 +12,7 @@
     shellAliases = {
         ls = "ls -lah | lolcat";
         nix-update = "doas nix flake update --flake /etc/nixos && doas nixos-rebuild switch --flake /etc/nixos#default && nix-collect-garbage -d && doas nix-collect-garbage -d";
+        rebuild-nix = "su -c 'nixos-rebuild switch --flake /home/saorsa/.files/Symlinks/Projects/.coding/Nix/NixOS#default' -";
         neofetch = "fastfetch | lolcat";
         cd = "z";
         college = "2fa college | waycopy";

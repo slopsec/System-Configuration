@@ -132,7 +132,7 @@
     hardware.enableAllFirmware  = true;
     hardware.graphics.enable32Bit = true;
     hardware.enableRedistributableFirmware = true;
-    services.flatpak.enable = true;
+  # services.flatpak.enable = true;
   # virtualisation.waydroid.enable = true;
     virtualisation.containers.enable = true;
     virtualisation.podman.enable = true;
@@ -152,6 +152,7 @@
     jovian.steam.desktopSession = "plasma";
   # jovian.steam.desktopSession = "cosmic";
   # jovian.steam.desktopSession = "hyprland";
+  # jovian.steam.desktopSession = "gamescope-wayland";
     jovian.steam.user = "saorsa";
 
   # Enable the OpenSSH daemon.
