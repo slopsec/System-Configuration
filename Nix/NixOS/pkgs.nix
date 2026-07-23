@@ -42,6 +42,7 @@
      jq
      unzip
      unrar
+     gparted
      kdePackages.konsole
      kdePackages.ark
      kdePackages.kio
@@ -113,7 +114,7 @@
   programs.steam.enable = true;
 
   # Guix, the standalone package manager.
-  # services.guix.enable = true;
+    services.guix.enable = true;
 
   # Installed Fonts.
   fonts.packages = with pkgs; [
@@ -147,9 +148,9 @@
      element-desktop
  #   dino
  #   hexchat
-     brave
- #   librewolf
-    #grayjay # Broken at the moment.
+ #   brave
+     librewolf
+ #   grayjay # Broken at the moment.
  #   freetube
  #   satisfactorymodmanager
  #   sgdboop

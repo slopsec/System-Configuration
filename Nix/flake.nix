@@ -1,40 +1,43 @@
 {
-  description = "Nixos config flake";
+  description = "Home Manager configuration of saorsa";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-      zen-browser = {
-        url = "github:0xc000022070/zen-browser-flake/beta";
-        inputs = {
+    # Specify the source of Home Manager and Nixpkgs.
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake/beta";
+      inputs = {
           # IMPORTANT: To ensure compatibility with the latest Firefox version, use nixpkgs-unstable.
-          nixpkgs.follows = "nixpkgs";
-          home-manager.follows = "home-manager";
-       };
+      nixpkgs.follows = "nixpkgs";
+      home-manager.follows = "home-manager";
+      };
     };
-      home-manager = {
-        url = "github:nix-community/home-manager";
-        inputs.nixpkgs.follows = "nixpkgs";
-       };
-    };
+  };
 
- outputs = { self, nixpkgs, home-manager, zen-browser,  ... }@inputs:
+  outputs =
+    { nixpkgs, home-manager, zen-browser, ... }:
     let
       system = "x86_64-linux";
-      username = "saorsa";
-      pkgs = import nixpkgs { system = "x86_64-linux"; config.allowUnfree = true; };
-
+      pkgs = import nixpkgs {
+        inherit system;
+        config = {
+          allowUnfree = true;
+        };
+      };
     in
     {
+      homeConfigurations."saorsa" = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        # Specify your home configuration modules here, for example,
+        # the path to your home.nix.
+        modules = [ ./home.nix ];
 
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {inherit inputs;};
-          modules = [
-            ./home.nix
-            inputs.zen-browser.homeModules.beta
-          ];
-        };
-
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+      };
     };
 }

@@ -37,11 +37,12 @@
 #     element-desktop
 #     dino
 #     hexchat
+      floorp-bin
       brave
       winetricks
       protontricks
       protonup-qt
-     #grayjay # Broken at the moment.
+      grayjay # Broken at the moment.
 #     freetube
 #     satisfactorymodmanager
       pinta
@@ -53,7 +54,7 @@
 #     audacity
 #     spotify
 #     authenticator
-      oh-my-posh
+#     oh-my-posh
 #     oh-my-zsh
       go-2fa
       wayclip
@@ -62,6 +63,7 @@
 #     vscodium
 #     ciscoPacketTracer9
 #     wireshark
+      teams-for-linux
       omnissa-horizon-client
       alarm-clock-applet
 #     openvas-scanner
@@ -91,10 +93,10 @@
     emoji = [ "Noto Color Emoji" ];
   };
 
-  programs.zen-browser = {
-    enable = true;
-    setAsDefaultBrowser = true;
-  };
+#  programs.zen-browser = {
+#    enable = true;
+#    setAsDefaultBrowser = true;
+#  };
 
   # Enable Nix Commands and flakes.
     nix = {
@@ -134,7 +136,7 @@
   #  /etc/profiles/per-user/saorsa/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "emacs";
+      EDITOR = "nano";
   };
 
   # Let Home Manager install and manage itself.
