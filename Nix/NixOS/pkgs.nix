@@ -10,7 +10,7 @@
   security.doas.enable = true;
 
   # Allow Wireshark to be enabled.
-  programs.wireshark.enable = true;
+  # programs.wireshark.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -32,49 +32,43 @@
   #  dconf-editor
   #  gnome-extension-manager
   #  ghostty
-     maliit-keyboard
-     mission-center
-     pavucontrol
-     baobab
+  #  maliit-keyboard
+  #  baobab
      steam
      lutris
-     git
-     jq
-     unzip
-     unrar
-     gparted
      kdePackages.konsole
+     kdePackages.kate
+     kdePackages.gwenview
      kdePackages.ark
      kdePackages.kio
      kdePackages.kalk
-     kdePackages.marknote
-     zoxide
   #  timeshift
-     flatpak
-     podman
-     distrobox
+  #  flatpak
+  #  podman
+  #  distrobox
   #  docker
   #  docker-client
   #  docker-compose
   #  docker-gc
   #  docker-ls
-     xhost
-     spice
-     spice-gtk
-     spice-vdagent
-     spice-protocol
-     iproute2
-     virt-manager
-     gnome-boxes
-     zenity
-     phodav
+  #  xhost
+  #  spice
+  #  spice-gtk
+  #  spice-vdagent
+  #  spice-protocol
+  #  iproute2
+  #  virt-manager
+  #  gnome-boxes
+  #  zenity
+  #  phodav
      oh-my-posh
+     easyeffects
   #  q4wine
   #  bottles
-     clisp
-     guile
-     python313
-     python313Packages.python-nmap
+  #  clisp
+  #  guile
+  #  python313
+  #  python313Packages.python-nmap
 
   # support both 32- and 64-bit applications
   # wineWowPackages.stable
@@ -129,67 +123,69 @@
    home-manager.users.saorsa = {pkgs, config, lib, ...}: {
      home.stateVersion = "22.11";
      home.packages = with pkgs; [
-  #  prismlauncher
-     kdePackages.kate
-     fastfetch
-     onlyoffice-desktopeditors
-     obsidian
- #   vesktop
- #   revolt-desktop
- #   element-desktop
- #   dino
- #   hexchat
- # Privacy focused instant messanging.
- #   telegram-desktop
- #   session-desktop
- #   signal-desktop
- #   briar-desktop
- #   revolt-desktop
-     element-desktop
- #   dino
- #   hexchat
- #   brave
-     librewolf
- #   grayjay # Broken at the moment.
- #   freetube
- #   satisfactorymodmanager
- #   sgdboop
-     gnome-disk-utility
-     pinta
-     dolphin-emu
-  #  steam-rom-manager
-  #  ryujinx
-  #  cemu
-  #  xemu
-  #  melonDS
-  #  audacity
-  #  spotify
-     authenticator
-     go-2fa
-     wayclip
-     mpv
-     ani-cli
-     lolcat
-     gdlauncher-carbon
-  #  For college.
-     vscodium
-  #  ciscoPacketTracer9
-  #  wireshark
-     omnissa-horizon-client
-     alarm-clock-applet
-  #  openvas-scanner
-#    Added by Sed.
+#     prismlauncher
+#     onlyoffice-desktopeditors
+#     vesktop
+   # Privacy focused instant messanging.
+      telegram-desktop
+#     session-desktop
+      signal-desktop
+#     briar-desktop
+#     revolt-desktop
+#     element-desktop
+#     sable-unwrapped
+#     cwtch-ui
+#     dino
+      gaijim
+#     hexchat
+#     mission-center
+      brave-origin
+      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+#     librewolf
+#     pavucontrol
+      grayjay
+#     freetube
+      satisfactorymodmanager
+#     pinta
+#     protonup-qt
+#     steam-rom-manager
+#     ryujinx
+#     cemu
+#     xemu
+#     melonDS
+#     audacity
+#     spotify
+#     authenticator
+#     oh-my-posh
+#     oh-my-zsh
+#     go-2fa
+#     wayclip
+#     gdlauncher-carbon
+#     prismlauncher
+  # For college.
+#     vscodium
+#     cisco-packet-tracer_9
+#     wireshark
+#     teams-for-linux
+      omnissa-horizon-client
+      alarm-clock-applet
+#     openvas-scanner
+    # # Adds the 'hello' command to your environment. It prints a friendly
+    # # "Hello, world!" when run.
+    # pkgs.hello
+
+    # # It is sometimes useful to fine-tune packages, for example, by applying
+    # # overrides. You can do that directly here, just don't forget the
+    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+    # # fonts?
+    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+
+    # # You can also create simple shell scripts directly inside your
+    # # configuration. For example, this adds a command 'my-hello' to your
+    # # environment:
+    # (pkgs.writeShellScriptBin "my-hello" ''
+    #   echo "Hello, ${config.home.username}!"
+    # '')
      ];
-
-  imports = [
-    inputs.zen-browser.homeModules.beta
-    # or inputs.zen-browser.homeModules.twilight
-    # or inputs.zen-browser.homeModules.twilight-official
-  ];
-
-  programs.zen-browser = {
-    enable = true;
-
-   };
   };
  }
