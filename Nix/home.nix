@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -20,32 +20,37 @@
   home.packages = with pkgs; [
       meslo-lgs-nf
       corefonts
+      deepfilternet
 #     prismlauncher
       onlyoffice-desktopeditors
 #     obsidian
 #     vesktop
-#     revolt-desktop
-#     element-desktop
-#     dino
-#     hexchat
    # Privacy focused instant messanging.
-#     telegram-desktop
-#     session-desktop
-#     signal-desktop
+      telegram-desktop
+      session-desktop
+      signal-desktop
 #     briar-desktop
 #     revolt-desktop
 #     element-desktop
+#     sable-unwrapped
+#     cwtch-ui
+      xdg-utils
 #     dino
+      gajim
 #     hexchat
-      floorp-bin
-      brave
+      mission-center
+      brave-origin
+      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
       winetricks
       protontricks
       protonup-qt
-      grayjay # Broken at the moment.
+#     pavucontrol
+      grayjay
 #     freetube
 #     satisfactorymodmanager
       pinta
+      protonup-qt
+      steam
 #     steam-rom-manager
 #     ryujinx
 #     cemu
@@ -56,15 +61,20 @@
 #     authenticator
 #     oh-my-posh
 #     oh-my-zsh
-      go-2fa
-      wayclip
-#   gdlauncher-carbon
+#     go-2fa
+#     wayclip
+#     gdlauncher-carbon
+      prismlauncher
   # For college.
 #     vscodium
-#     ciscoPacketTracer9
+      cisco-packet-tracer_9
 #     wireshark
-      teams-for-linux
+#     teams-for-linux
       omnissa-horizon-client
+      gst_all_1.gstreamer
+      gst_all_1.gst-plugins-good
+      gst_all_1.gst-plugins-bad
+      gst_all_1.gst-libav
       alarm-clock-applet
 #     openvas-scanner
     # # Adds the 'hello' command to your environment. It prints a friendly
@@ -85,6 +95,16 @@
     # '')
     ];
 
+  # Overlay for cisco-packet-tracer_9 to address an issue between Nix versions.
+  nixpkgs.overlays = [ (final: prev: {
+  packettracer = prev.packettracer.overrideAttrs (old: {
+    src = prev.requireFile {
+      name = "CiscoPacketTracer_901_Ubuntu_64bit.deb";
+      sha256 = "sha256-NoPdh+d5iFNyrpo1wabllNEvST5knnxpdAhynBRZR5s=";
+    };
+  });
+}) ];
+
   fonts.fontconfig.enable = true;
   fonts.fontconfig.defaultFonts = {
     sansSerif = [ "Noto Sans" ];
@@ -92,11 +112,6 @@
     monospace = [ "Fira Code" ];
     emoji = [ "Noto Color Emoji" ];
   };
-
-#  programs.zen-browser = {
-#    enable = true;
-#    setAsDefaultBrowser = true;
-#  };
 
   # Enable Nix Commands and flakes.
     nix = {
@@ -135,9 +150,9 @@
   #
   #  /etc/profiles/per-user/saorsa/etc/profile.d/hm-session-vars.sh
   #
-  home.sessionVariables = {
-      EDITOR = "nano";
-  };
+  # home.sessionVariables = {
+  #    EDITOR = "nano";
+  # };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
