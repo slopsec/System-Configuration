@@ -13,7 +13,8 @@
              (nongnu packages linux)
              (nongnu system linux-initrd)
              (Configuration pkgs)
-             (Configuration hardware-configuration))
+             (Configuration hardware-configuration)
+             (Configuration plasma))
 
 (operating-system
   (kernel linux)
@@ -34,12 +35,20 @@
                                           "audio" "video"))
                   (shell (file-append zsh "/bin/zsh"))) %base-user-accounts))
 
+  (kernel-arguments
+  (append
+    '("hid_steam.lizard_mode=0")
+    %default-kernel-arguments))
+
   (packages system-packages)
+
+  ;; Fix to remove sudo and enable doas.
+  (privileged-programs
+  %privileged-programs)
 
   ;; Below is the list of system services.  To search for available
   ;; services, run 'guix system search KEYWORD' in a terminal.
-  (services
-   system-services)
+  (services system-services)
   (bootloader system-bootloader)
 
   ;; The list of file systems that get "mounted".  The unique
