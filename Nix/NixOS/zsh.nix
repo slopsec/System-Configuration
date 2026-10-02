@@ -10,12 +10,12 @@
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
-        ls = "ls -lah | lolcat";
-        nix-update = "doas nix flake update --flake /etc/nixos && doas nixos-rebuild switch --flake /etc/nixos#default && nix-collect-garbage -d && doas nix-collect-garbage -d";
-        rebuild-nix = "su -c 'nixos-rebuild switch --flake /home/saorsa/.files/Symlinks/Projects/.coding/Nix/NixOS#default' -";
+        ls = "ls -lah --color=tty | lolcat";
+        clear = "printf '\e[2J\e[H'";
+        system-gc = "su -c 'guix gc --delete-generations=1m' - && su -c 'nix-collect-garbage -d' - && guix gc --delete-generations=1m && nix-collect-garbage -d";
+        system-update = "su -c 'nixos-rebuild switch --flake /home/saorsa/.files/Symlinks/Projects/.coding/Nix/NixOS#default' - && guix time-machine -C /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm -- home reconfigure /home/saorsa/.files/Symlinks/Projects/.coding/Lisp/Guix/home-configuration.scm";
         neofetch = "fastfetch | lolcat";
         cd = "z";
-        college = "2fa college | waycopy";
         shutdown = "systemctl poweroff";
         sudo = "doas";
   };
