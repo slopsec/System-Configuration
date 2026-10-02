@@ -106,9 +106,6 @@
   # Enabling Nix commands & flakes.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # Enable Bluetooth services.
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
@@ -134,13 +131,13 @@
     hardware.enableRedistributableFirmware = true;
   # services.flatpak.enable = true;
   # virtualisation.waydroid.enable = true;
-    virtualisation.containers.enable = true;
-    virtualisation.podman.enable = true;
-    networking.iproute2.enable = true;
-    virtualisation.libvirtd.enable = true;
-    virtualisation.spiceUSBRedirection.enable = true;
-    services.spice-vdagentd.enable = true;
-    services.spice-webdavd.enable = true;
+  # virtualisation.containers.enable = true;
+  # virtualisation.podman.enable = true;
+  # networking.iproute2.enable = true;
+  # virtualisation.libvirtd.enable = true;
+  # virtualisation.spiceUSBRedirection.enable = true;
+  # services.spice-vdagentd.enable = true;
+  # services.spice-webdavd.enable = true;
 
   # Enable SteamOS components.
     jovian.devices.steamdeck.enable = true;
@@ -149,10 +146,10 @@
   # jovian.steam.desktopSession = "gnome";
   # jovian.steam.desktopSession = "gnome-xorg";
   # jovian.steam.desktopSession = "plasmawayland";
-    jovian.steam.desktopSession = "plasma";
+  # jovian.steam.desktopSession = "plasma";
   # jovian.steam.desktopSession = "cosmic";
   # jovian.steam.desktopSession = "hyprland";
-  # jovian.steam.desktopSession = "gamescope-wayland";
+    jovian.steam.desktopSession = "gamescope-wayland";
     jovian.steam.user = "saorsa";
 
   # Enable the OpenSSH daemon.
@@ -162,7 +159,7 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-    networking.firewall.enable = false;
+    networking.firewall.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
