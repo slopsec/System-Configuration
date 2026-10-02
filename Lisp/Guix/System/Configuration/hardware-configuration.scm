@@ -1,7 +1,7 @@
 (define-module (Configuration hardware-configuration)
   #:use-module (gnu)
   #:use-module (guix)
-  #:export (system-swap swap-arguments the-file-systems))
+  #:export (system-swap the-file-systems))
 
 (define system-swap
   (list
