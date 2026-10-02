@@ -10,11 +10,10 @@
       };
 
       zen-browser = {
-        url = "github:0xc000022070/zen-browser-flake/beta";
+        url = "github:youwen5/zen-browser-flake";
         inputs = {
           # IMPORTANT: To ensure compatibility with the latest Firefox version, use nixpkgs-unstable.
           nixpkgs.follows = "nixpkgs";
-          home-manager.follows = "home-manager";
        };
     };
       home-manager = {
@@ -26,7 +25,12 @@
  outputs = { self, nixpkgs, Jovian-NixOS, home-manager, zen-browser,  ... }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = nixpkgs.legacyPackages.${system} {
+        inherit system;
+        config = {
+          allowUnfree = true;
+        };
+      };
     in
     {
 
