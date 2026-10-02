@@ -2,24 +2,23 @@
   description = "Home Manager configuration of saorsa";
 
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake/beta";
-      inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+      zen-browser = {
+        url = "github:youwen5/zen-browser-flake";
+        inputs = {
           # IMPORTANT: To ensure compatibility with the latest Firefox version, use nixpkgs-unstable.
-      nixpkgs.follows = "nixpkgs";
-      home-manager.follows = "home-manager";
-      };
+          nixpkgs.follows = "nixpkgs";
+       };
     };
-  };
+      home-manager = {
+        url = "github:nix-community/home-manager";
+        inputs.nixpkgs.follows = "nixpkgs";
+       };
+    };
 
   outputs =
-    { nixpkgs, home-manager, zen-browser, ... }:
+    { self, nixpkgs, home-manager, zen-browser,  ... }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -32,9 +31,11 @@
     {
       homeConfigurations."saorsa" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
+        extraSpecialArgs = {inherit inputs;};
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
-        modules = [ ./home.nix ];
+        modules = [ ./home.nix
+        ];
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
