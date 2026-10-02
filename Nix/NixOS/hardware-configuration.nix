@@ -14,51 +14,63 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/media/shared" =
-    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
       fsType = "btrfs";
       options = [ "subvol=@shared" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
     };
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
       fsType = "btrfs";
       options = [ "subvol=@nixos/@" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
       fsType = "btrfs";
       options = [ "subvol=@nixos/@home" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
     };
 
   fileSystems."/.snapshots" =
-    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
       fsType = "btrfs";
       options = [ "subvol=@nixos/@snapshots" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
     };
 
   fileSystems."/var" =
-    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
       fsType = "btrfs";
       options = [ "subvol=@nixos/@var" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
     };
 
+# fileSystems."/var/log" =
+#   { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
+#     fsType = "btrfs";
+#     options = [ "subvol=@nixos/@log" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
+#   };
+
+  fileSystems."/srv" =
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
+      fsType = "btrfs";
+      options = [ "subvol=@nixos/@srv" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
+    };
+
 #  fileSystems."/nix" =
-#    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+#    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
 #      fsType = "btrfs";
 #      options = [ "subvol=@nixos/@nix" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
 #    };
 
 #  fileSystems."/gnu" =
-#    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+#    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
 #      fsType = "btrfs";
 #      options = [ "subvol=@nixos/@gnu" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
 #    };
 
   fileSystems."/swap" =
-    { device = "/dev/disk/by-uuid/58e043e1-c58a-4d6d-9d7d-e41baf92dc7f";
+    { device = "/dev/disk/by-uuid/c28531f4-8246-4f9b-bab1-05ec16fccf96";
       fsType = "btrfs";
-      options = [ "subvol=@nixos/@swap" "noatime" "space_cache=v2" "compress=zstd" "ssd" "discard=async" ];
+      options = [ "subvol=@nixos/@swap" "nodatacow" "compress=no" ];
     };
 
   swapDevices = [{
@@ -67,7 +79,7 @@
    }];
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/2211-E5D1";
+    { device = "/dev/disk/by-uuid/246C-4059";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
