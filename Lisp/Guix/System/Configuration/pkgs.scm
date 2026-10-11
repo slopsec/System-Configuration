@@ -26,7 +26,6 @@
   #:use-module (gnu services ssh)
   #:use-module (gnu services xorg)
   #:use-module (srfi srfi-1)
-  #:use-module (Configuration plasma)
   #:export (the-keyboard-layout
             %base-packages-doas
             %privileged-programs
@@ -62,6 +61,19 @@
                   (file-append sudo "/bin/sudoedit")))))
       %default-privileged-programs)))
 
+;; Nix normally adds a /nix/store file-system service.
+;; We already provide /nix/store ourselves because it lives on
+;; our Btrfs @guix/@nix/@store subvolume, so remove that extension.
+(define modified-nix-service-type
+  (service-type
+    (inherit nix-service-type)
+    (extensions
+      (filter
+        (lambda (extension)
+          (not (eq? (service-extension-target extension)
+                    file-system-service-type)))
+        (service-type-extensions nix-service-type)))))
+
   ;; Packages installed system-wide.  Users can also install packages
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
@@ -69,6 +81,8 @@
                                     '("opendoas"
                                       "nss-certs"
                                       "xdg-utils"
+                                      "btrfs-progs"
+                                      "snapper"
 ;                                      "nftables"
 ;                                      "ulogd"
 ;                                      "clamav"
@@ -121,7 +135,9 @@
                                       "jq"
                                       "uchardet"
                                       "unrar"
+                                      "zip"
                                       "kate"
+                                      "kitty" ;; TEMP.
                                       "kcalc"
                                       "gwenview"
                                       "ark"
@@ -150,7 +166,7 @@
                                     "emacs-magit"
                                     "emacs-ivy"
                                     "emacs-ivy-rich"
-                                    "emacs-which-key"
+;                                   "emacs-which-key" ;; Missing package.
                                     "emacs-pcmpl-args"
                                     "emacs-auto-complete"
                                     "emacs-goto-chg"
@@ -179,7 +195,7 @@
                                     "yt-dlp"
                                     "fzf"
                                     "openssl"
-                                    "ani-cli"
+;                                   "ani-cli" ;; Outdated.
                                     "gnome-disk-utility"
                                     "lolcat"
                                     "obsidian"
@@ -217,11 +233,6 @@
        (service home-pipewire-service-type
         (home-pipewire-configuration
          (enable-pulseaudio? #t)))
-
-           ;; Global theme configuration for KDE PLasma.
-           (service home-plasma-look-and-feel-service-type
-             (plasma-look-and-feel-configuration
-               (name "Utterly-Mine")))
 
            ;; Home-manager activation hook.
             (simple-service
@@ -339,7 +350,7 @@
                 (service virtlog-service-type
                  (virtlog-configuration
                   (max-clients 1000)))
-                 (service nix-service-type)
+                (service modified-nix-service-type)
                  (service openssh-service-type
                   (openssh-configuration
                    (port-number 6967)
@@ -395,7 +406,7 @@
              (guix-extension
                (authorized-keys
                (list (plain-file "guix-moe.pub"
-                       "(public-key (ecc (curve Ed25519) (q #552F670D5005D7EB6ACF05284A1066E52156B51D75DE3EBD3030CD046675D543#)))")))
+                       "(public-key (ecc (curve Ed25519) (q #C1FD53E5D4CE971933EC50C9F307AE2171A2D3B52C804642A7A35F84F3A4EA98#)))")))
                (substitute-urls
                '("https://cache-fi.guix.moe"))))
 
