@@ -20,6 +20,19 @@
            (type "btrfs")
            (options "compress=zstd,subvol=@guix/@"))
          (file-system
+           (mount-point "/gnu/store")
+           (device (uuid "c28531f4-8246-4f9b-bab1-05ec16fccf96"
+                         'btrfs))
+           (type "btrfs")
+           (options "compress=zstd,subvol=@guix/@gnu/@store")
+           (needed-for-boot? #t))
+         (file-system
+           (mount-point "/nix/store")
+           (device (uuid "c28531f4-8246-4f9b-bab1-05ec16fccf96"
+                         'btrfs))
+           (type "btrfs")
+           (options "compress=zstd,subvol=@guix/@nix/@store"))
+         (file-system
            (mount-point "/media/shared")
            (device (uuid "c28531f4-8246-4f9b-bab1-05ec16fccf96"
                          'btrfs))
