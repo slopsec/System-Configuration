@@ -13,8 +13,7 @@
              (nongnu packages linux)
              (nongnu system linux-initrd)
              (Configuration pkgs)
-             (Configuration hardware-configuration)
-             (Configuration plasma))
+             (Configuration hardware-configuration))
 
 (operating-system
   (kernel linux)
