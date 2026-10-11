@@ -13,6 +13,7 @@
   #:use-module (gnu packages admin)
   #:use-module (gnu system shadow)
   #:use-module (gnu services)
+  #:use-module (gnu services shepherd)
   #:use-module (gnu services guix)
   #:use-module (gnu services virtualization)
   #:use-module (gnu services dbus)
@@ -26,6 +27,7 @@
   #:use-module (gnu services ssh)
   #:use-module (gnu services xorg)
   #:use-module (srfi srfi-1)
+  #:use-module (gnu packages file-systems)
   #:export (the-keyboard-layout
             %base-packages-doas
             %privileged-programs
@@ -61,18 +63,67 @@
                   (file-append sudo "/bin/sudoedit")))))
       %default-privileged-programs)))
 
-;; Nix normally adds a /nix/store file-system service.
-;; We already provide /nix/store ourselves because it lives on
-;; our Btrfs @guix/@nix/@store subvolume, so remove that extension.
-(define modified-nix-service-type
-  (service-type
-    (inherit nix-service-type)
-    (extensions
-      (filter
-        (lambda (extension)
-          (not (eq? (service-extension-target extension)
-                    file-system-service-type)))
-        (service-type-extensions nix-service-type)))))
+  ;; Nix normally adds a /nix/store file-system service.
+  ;; We already provide /nix/store ourselves because it lives on
+  ;; our Btrfs @guix/@nix/@store subvolume, so remove that extension.
+  (define modified-nix-service-type
+    (service-type
+      (inherit nix-service-type)
+      (extensions
+        (filter
+          (lambda (extension)
+            (not (eq? (service-extension-target extension)
+                      file-system-service-type)))
+          (service-type-extensions nix-service-type)))))
+
+  ;; Snapper timer configuration.
+  (define snapper-bin
+    (file-append snapper "/bin/snapper"))
+
+  (define snapper-configs
+    '("root" "home" "shared"))
+
+  (define (snapper-timers config)
+    (define (timer-name action)
+      (list
+      (string->symbol
+        (string-append "snapper-" action "-" config))))
+
+    (list
+    (shepherd-timer
+      (timer-name "timeline")
+      "0 * * * *"
+      #~(#$snapper-bin
+        "-c" #$config
+        "create"
+        "--type" "timeline"
+        "--description" "timeline"
+        "--cleanup-algorithm" "timeline"))
+
+    (shepherd-timer
+      (timer-name "number-cleanup")
+      "0 3 * * *"
+      #~(#$snapper-bin
+        "-c" #$config
+        "cleanup" "number"))
+
+    (shepherd-timer
+      (timer-name "timeline-cleanup")
+      "0 3 * * *"
+      #~(#$snapper-bin
+        "-c" #$config
+        "cleanup" "timeline"))
+
+    (shepherd-timer
+      (timer-name "empty-pre-post-cleanup")
+      "0 3 * * *"
+      #~(#$snapper-bin
+        "-c" #$config
+        "cleanup" "empty-pre-post"))))
+
+  (define snapper-all-timers
+    (apply append
+          (map snapper-timers snapper-configs)))
 
   ;; Packages installed system-wide.  Users can also install packages
   ;; under their own account: use 'guix search KEYWORD' to search
@@ -219,16 +270,16 @@
                   (plain-file
                     "aliases"
                       "alias ll='ls -lah'
-                      alias guix-update='doas guix pull -C /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/rolling.scm && doas guix describe -f channels > /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm && guix pull -C /home/saorsa/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm && nix flake update --flake /media/shared/.files/Symlinks/Projects/.coding/Nix'
-                      alias guix-system='doas guix time-machine -C /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm -- system -L /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/System reconfigure /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/System/Configuration/configuration.scm && home-manager switch --flake /media/shared/.files/Symlinks/Projects/.coding/Nix'
-                      alias home-update='guix pull -C /home/saorsa/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm'
-                      alias guix-home='guix time-machine -C /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm -- home reconfigure /home/saorsa/.files/Symlinks/Projects/.coding/Lisp/Guix/home-configuration.scm'
-                      alias guix-gc='guix gc --delete-generations=1m && nix-collect-garbage -d && doas guix gc --delete-generations=1m && doas nix-collect-garbage -d'
-                      alias ls='ls -lah --color=tty | lolcat'
-                      alias neofetch='fastfetch | lolcat'
-                      alias cd='z'
-                      alias sudo='doas'
-                      alias college='2fa college | waycopy'")))))
+                       alias guix-update='/home/saorsa/.local/bin/guix-snapshots update'
+                       alias guix-system='/home/saorsa/.local/bin/guix-snapshots system'
+                       alias home-update='guix pull -C /home/saorsa/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm'
+                       alias guix-home='guix time-machine -C /media/shared/.files/Symlinks/Projects/.coding/Lisp/Guix/lock.scm -- home reconfigure /home/saorsa/.files/Symlinks/Projects/.coding/Lisp/Guix/home-configuration.scm'
+                       alias guix-gc='guix gc --delete-generations=1m && nix-collect-garbage -d && doas guix gc --delete-generations=1m && doas nix-collect-garbage -d'
+                       alias ls='ls -lah --color=tty | lolcat'
+                       alias neofetch='fastfetch | lolcat'
+                       alias cd='z'
+                       alias sudo='doas'
+                       alias college='2fa college | waycopy'")))))
        (service home-dbus-service-type)
        (service home-pipewire-service-type
         (home-pipewire-configuration
@@ -334,6 +385,10 @@
   (define system-services
    (cons*        (service plasma-desktop-service-type)
 
+(simple-service 'snapper-dbus
+                dbus-root-service-type
+                (list snapper))
+
                  ;; To configure OpenSSH, pass an 'openssh-configuration'
                  ;; record as a second argument to 'service' below.
                  (service sddm-service-type
@@ -391,6 +446,12 @@
              (udev-rule
              "60-uinput.rules"
              "KERNEL==\"uinput\", TAG+=\"uaccess\"")))
+
+           ;; GNU Sheperd timers for snapper.
+           (simple-service
+           'snapper-timers
+           shepherd-root-service-type
+           snapper-all-timers)
 
            ;; "Nonguix": binary substitutes for non-free packages
            (simple-service 'nonguix guix-service-type
